@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version "8.3.0"
+}
+
+group = 'carlisle.XServer'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'net.minestom:minestom-snapshots:65f75bb059'
+    implementation 'org.slf4j:slf4j-api:2.1.0-alpha1'
+    implementation 'org.slf4j:slf4j-simple:2.0.0' // or the latest version
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = "carlisle.XServer.Main" // Change this to your main class
+        }
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
+    shadowJar {
+        mergeServiceFiles()
+        archiveClassifier.set("") // Prevent the -all suffix on the shadowjar file.
+    }
+
+
+}
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
